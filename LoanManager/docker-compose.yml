@@ -1,0 +1,15 @@
+
+services:
+  prestamosdb:
+    image: postgres:16.0
+
+  prestamosapi:
+    image:  ${DOCKER_REGISTRY-}prestamosapi
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      
+  serilogseq:
+    image: datalust/seq:2023.4
+volumes:
+  prestamosdb_data:

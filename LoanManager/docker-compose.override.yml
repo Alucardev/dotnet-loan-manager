@@ -1,0 +1,35 @@
+services:
+  prestamosdb:
+    container_name: prestamosdb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=dbprestamos
+    restart: always
+    volumes:
+      - ./.container/database:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+
+  prestamosapi:
+    container_name: prestamosapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Test
+      - ASPNETCORE_URLS=http://+:5000
+      - ConnectionStrings__ConnectionString=Host=prestamosdb;Port=5432;Database=dbprestamos;Username=postgres;Password=postgres
+
+    depends_on:
+      - prestamosdb
+    ports:
+      - 9003:5000
+
+  serilogseq:
+    container_name: serilogseq
+    environment:
+      - ACCEPT_EULA=Y   
+    ports:
+      - 5341:5341
+      - 8081:80
+
+ #docker compose -f docker-compose.yml -f docker-compose.override.yml up -d
+ #dotnet ef migrations add desc -p src/LoanManager.Infrastructure -s src/LoanManager.Api
